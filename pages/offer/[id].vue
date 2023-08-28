@@ -134,6 +134,7 @@ const { pending: pendingOffer, data: offer, error: errorOffer } = await useMyFet
   `/offers/${route.params.id}`,
   {
     lazy: true,
+    server: false,
   }
 );
 const {
@@ -142,6 +143,7 @@ const {
   error: errorPictures,
 } = await useMyFetch<Picture[]>(`/pictures`, {
   lazy: true,
+  server: false,
 });
 
 function getImageDrop(file: File) {
