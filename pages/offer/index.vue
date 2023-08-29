@@ -20,7 +20,6 @@
 //import { useMyFetch } from "~/composables/useMyFetch";
 const { pending, data: offers, error } = await useMyFetch("/offers", {
   lazy: true,
-  server: false,
 });
 
 /* const { data: offers, pending, error, refresh } = await useAsyncData("mountains", () =>
