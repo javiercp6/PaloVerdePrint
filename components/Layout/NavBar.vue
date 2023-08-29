@@ -314,12 +314,7 @@ onMounted(() => {
   });
 
 watch(route, () => {
-  setTimeout(() => {
-    console.log("Retrasado por 1 segundo.");
-    dropdownOpen.value = false;
-  }, 100);
-
-  console.log(route.path, "trtrtr");
+  dropdownOpen.value = false;
 });
 </script>
 
