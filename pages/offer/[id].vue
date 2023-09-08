@@ -1,6 +1,6 @@
 <template>
   <section class="">
-    <div id="ItemPage" class="mt-4 max-w-[1200px] mx-auto px-2">
+    <div class="mt-4 max-w-[1200px] mx-auto px-2">
       <div class="md:flex gap-4 justify-between mx-auto w-full">
         <div class="md:w-[40%] p-3">
           <div class="bg-base-200 rounded-lg p-3">
@@ -125,6 +125,9 @@
 
 <script setup lang="ts">
 import { Offer, Picture } from "@/types/interface";
+definePageMeta({
+  auth: false,
+});
 const route = useRoute();
 const { addWish, wishForm, pendingWish } = useWish();
 const currentImage = ref("/assets/noimage.webp");

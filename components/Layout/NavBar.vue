@@ -103,7 +103,7 @@
           </li>
         </ul>
       </div>
-      <a class="btn btn-ghost normal-case text-xl">Palo Verde</a>
+      <NuxtLink to="/" class="btn btn-ghost normal-case text-xl">Palo Verde</NuxtLink>
     </div>
     <div class="navbar-center hidden md:flex">
       <ul class="menu menu-horizontal px-1">
@@ -249,7 +249,7 @@
           </div>
         </div> -->
       </div>
-      <div class="dropdown dropdown-end">
+      <div v-if="status === 'authenticated'" class="dropdown dropdown-end">
         <label tabindex="0" class="btn btn-ghost btn-circle avatar">
           <!-- <div class="w-10 flex justify-center justify-items-center rounded-full">
             <div>
@@ -271,25 +271,35 @@
           tabindex="0"
           class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
         >
+          <li v-if="data?.fullName">
+            <a>{{ data.fullName }}</a>
+          </li>
           <li>
             <a class="justify-between">
               Profile
               <span class="badge">New</span>
             </a>
           </li>
-          <li><a>Settings</a></li>
-          <li><a>Logout</a></li>
+          <li @click="onSingnOut"><a>Logout</a></li>
         </ul>
       </div>
+      <NuxtLink
+        v-if="status === 'unauthenticated'"
+        class="btn btn-primary btn-sm text-xs"
+        to="/login"
+        >Login</NuxtLink
+      >
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useCartStore } from "@/stores/cart";
-import { useRoute, onBeforeRouteUpdate } from "vue-router";
+const { data, status, signOut } = useAuth();
+const { $toast } = useNuxtApp();
+import { useRoute } from "vue-router";
 const colorMode = useColorMode();
-const darkMode = ref(colorMode.preference === "dark" ? true : false);
+//const darkMode = ref(colorMode.preference === "dark" ? true : false);
 const store = useCartStore();
 
 const dropdownOpen = ref(false);
@@ -303,19 +313,44 @@ onMounted(() => {
       dropdownOpen.value = false;
     }
   });
-}),
-  watch(darkMode, (newValue, oldName) => {
+});
+const darkMode = computed({
+  get() {
+    return colorMode.value === "dark";
+  },
+  set() {
+    colorMode.preference = colorMode.value === "dark" ? "light" : "dark";
+  },
+});
+/* watch(darkMode, (newValue, oldName) => {
     // Haz algo (side effects) 👁
     if (newValue) {
       colorMode.preference = "dark";
     } else {
       colorMode.preference = "light";
     }
-  });
+  }); */
 
 watch(route, () => {
   dropdownOpen.value = false;
 });
+
+const onSingnOut = async () => {
+  /* await signOut({
+    redirect: false,
+  }); */
+  $toast.promise(
+    signOut({
+      redirect: false,
+    }),
+    {
+      loading: "Closing section",
+      success: (data: any) => "Success signOut",
+      error: (data: any) => "Error signOut",
+    }
+  );
+  navigateTo("/");
+};
 </script>
 
 <style scoped></style>

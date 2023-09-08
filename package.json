@@ -20,9 +20,11 @@
     "nuxt": "^3.6.5"
   },
   "dependencies": {
+    "@formkit/nuxt": "^1.0.0",
     "@pinia-plugin-persistedstate/nuxt": "^1.1.1",
     "@pinia/nuxt": "^0.4.11",
-    "@vee-validate/nuxt": "^4.11.1",
-    "@vee-validate/yup": "^4.11.1"
+    "@sidebase/nuxt-auth": "^0.6.0-beta.4",
+    "@unlok-co/nuxt-stripe": "^2.0.0",
+    "vue-sonner": "^0.4.4"
   }
 }

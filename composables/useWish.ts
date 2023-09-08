@@ -35,7 +35,7 @@ export const useWish = () => {
       method: 'POST',
       body: formData
   }) */
-  const wish = await $fetch<Wish>('https://apipaloverde.vercel.app/api/wishes', {
+  const wish = await $fetch<Wish>('https://apipaloverde.onrender.com/api/wishes', {
     method: 'POST',
     body: formData
   }).catch((error) => {
