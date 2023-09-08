@@ -82,4 +82,7 @@
 <script setup>
 import { useCartStore } from "@/stores/cart";
 const store = useCartStore();
+definePageMeta({
+  auth: false,
+});
 </script>
