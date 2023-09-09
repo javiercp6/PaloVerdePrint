@@ -12,7 +12,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      baseURL: process.env.BASE_URL || 'https://api.uuu.com/',
+      baseURL: process.env.BASE_URL || 'https://paloverde-production.up.railway.app/',
     },
   },
   /* fetch: {
@@ -34,7 +34,7 @@ export default defineNuxtConfig({
     /* token: {
       signInResponseTokenPointer: '/tokens/accessToken'
     }, */
-    baseURL: 'https://apipaloverde.onrender.com/api/auth',
+    baseURL: 'https://paloverde-production.up.railway.app/api/auth',
     /* session: {
       // Whether to refresh the session every time the browser window is refocused.
       enableRefreshOnWindowFocus: true,

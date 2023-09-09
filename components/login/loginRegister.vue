@@ -121,7 +121,7 @@ const register = async (data: DataLogin) => {
       { redirect: false}
     ); */
     const user = await $fetch<DataLogin>(
-      "https://apipaloverde.onrender.com/api/auth/register",
+      "https://paloverde-production.up.railway.app/api/auth/register",
       {
         method: "POST",
         body: { email: data.username, password: data.password, fullName: data.fullName },

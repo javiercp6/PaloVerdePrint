@@ -3,7 +3,7 @@ import { Offer } from '../types/interface';
 export const useOffer = (id: string = '') => {
   const getOffers = async():Promise<Object> => {
     //const { data } = await useFetch<Offer[]>('https://apipaloverde.vercel.app/api/offers');
-    const { pending, data: offers, error } = await useFetch('https://apipaloverde.vercel.app/api/offers', {
+    const { pending, data: offers, error } = await useFetch('https://paloverde-production.up.railway.app/api/offers', {
       lazy: true,
     })
     console.log(offers, error);
