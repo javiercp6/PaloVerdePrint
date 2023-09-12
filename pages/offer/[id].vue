@@ -125,26 +125,21 @@
 
 <script setup lang="ts">
 import { Offer, Picture } from "@/types/interface";
-definePageMeta({
-  auth: false,
-});
 const route = useRoute();
 const { addWish, wishForm, pendingWish } = useWish();
 const currentImage = ref("/assets/noimage.webp");
 let checkboxDrop = ref(false);
 
-const { pending: pendingOffer, data: offer, error: errorOffer } = await useMyFetch<Offer>(
+const { pending: pendingOffer, data: offer, error: errorOffer } = await useFetch<Offer>(
   `/offers/${route.params.id}`,
   {
     lazy: true,
     server: false,
   }
 );
-const {
-  pending: pendingPictures,
-  data: pictures,
-  error: errorPictures,
-} = await useMyFetch<Picture[]>(`/pictures`, {
+const { pending: pendingPictures, data: pictures, error: errorPictures } = await useFetch<
+  Picture[]
+>(`/pictures`, {
   lazy: true,
   server: false,
 });

@@ -21,10 +21,6 @@
 
 <script setup lang="ts">
 //import { useMyFetch } from "~/composables/useMyFetch";
-definePageMeta({
-  auth: false,
-});
-const { signIn, token, data, status, lastRefreshedAt, signOut, getSession } = useAuth();
 const { pending, data: offers, error } = await useMyFetch("/offers", {
   lazy: true,
 });

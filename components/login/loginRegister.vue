@@ -64,16 +64,8 @@
 </template>
 
 <script setup lang="ts">
-const {
-  signIn,
-  signUp,
-  token,
-  data,
-  status,
-  lastRefreshedAt,
-  signOut,
-  getSession,
-} = useAuth();
+import { useAuthStore } from "@/stores/auth";
+const store = useAuthStore();
 const { $toast } = useNuxtApp();
 const route = useRoute();
 interface DataLogin {
@@ -95,21 +87,22 @@ const onsubmit = async (data: DataLogin) => {
 
 const login = async (data: DataLogin) => {
   console.log(data);
-  try {
-    loading.value = true;
-    const a = await signIn(data, { redirect: false /* callbackUrl: "/login" */ });
+
+  loading.value = true;
+  //const a = await signIn(data, { redirect: false /* callbackUrl: "/login" */ });
+  const { ok, message } = await store.loginUser(data);
+  if (ok) {
     $toast.success("welcome");
     if (route.redirectedFrom?.name === "checkout") {
       navigateTo("/checkout");
     } else {
       navigateTo("/offer");
     }
-  } catch (error) {
-    //console.log(error, "aaaaa");
-    $toast.error("Unexpected error, please try again");
-  } finally {
-    loading.value = false;
+  } else {
+    $toast.error(message);
   }
+
+  loading.value = false;
 };
 
 const register = async (data: DataLogin) => {
@@ -120,25 +113,22 @@ const register = async (data: DataLogin) => {
       { email: data.username, password: data.password, fullName: data.fullName },
       { redirect: false}
     ); */
-    const user = await $fetch<DataLogin>(
-      "https://paloverde-production.up.railway.app/api/auth/register",
-      {
-        method: "POST",
-        body: { email: data.username, password: data.password, fullName: data.fullName },
-      }
-    ).catch((error) => {
+    const user = await $fetch<DataLogin>("auth/register", {
+      method: "POST",
+      body: { email: data.username, password: data.password, fullName: data.fullName },
+    }).catch((error) => {
       $toast.error(error.data.message[0]);
     });
     if (user) {
       console.log(user, "registrado");
       /* $toast.promise(login(user), {
-        loading: "Loading",
+        loading: "Login",
       }); */
       $toast.success("Registered user successfully");
       $toast.promise(login(user), {
-        loading: "Loading",
-        success: (data: any) => "Success",
-        error: (data: any) => "Error",
+        loading: "Login...",
+        success: (data: any) => "",
+        error: (data: any) => "",
       });
     }
   } catch (error) {

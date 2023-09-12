@@ -44,6 +44,13 @@ export interface Offer {
     amount: number,
     size: number,
   }
+
+  export interface User {
+    _id: string,
+    email: string,
+    fullName: string,
+    roles: Array<string>
+  }
 /* 
   export interface Orden {
     _id: string;

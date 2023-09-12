@@ -249,8 +249,12 @@
           </div>
         </div> -->
       </div>
-      <div v-if="status === 'authenticated'" class="dropdown dropdown-end">
-        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+      <div class="dropdown dropdown-end">
+        <label
+          v-if="storeAuth.authenticated"
+          tabindex="0"
+          class="btn btn-ghost btn-circle avatar"
+        >
           <!-- <div class="w-10 flex justify-center justify-items-center rounded-full">
             <div>
               
@@ -271,8 +275,8 @@
           tabindex="0"
           class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
         >
-          <li v-if="data?.fullName">
-            <a>{{ data.fullName }}</a>
+          <li>
+            <a>{{ storeAuth.user.fullName }}</a>
           </li>
           <li>
             <a class="justify-between">
@@ -284,7 +288,7 @@
         </ul>
       </div>
       <NuxtLink
-        v-if="status === 'unauthenticated'"
+        v-if="!storeAuth.authenticated"
         class="btn btn-primary btn-sm text-xs"
         to="/login"
         >Login</NuxtLink
@@ -295,8 +299,9 @@
 
 <script setup lang="ts">
 import { useCartStore } from "@/stores/cart";
-const { data, status, signOut } = useAuth();
-const { $toast } = useNuxtApp();
+//const { data, status, signOut } = useAuth();
+import { useAuthStore } from "@/stores/auth";
+const storeAuth = useAuthStore();
 import { useRoute } from "vue-router";
 const colorMode = useColorMode();
 //const darkMode = ref(colorMode.preference === "dark" ? true : false);
@@ -335,20 +340,8 @@ watch(route, () => {
   dropdownOpen.value = false;
 });
 
-const onSingnOut = async () => {
-  /* await signOut({
-    redirect: false,
-  }); */
-  $toast.promise(
-    signOut({
-      redirect: false,
-    }),
-    {
-      loading: "Closing section",
-      success: (data: any) => "Success signOut",
-      error: (data: any) => "Error signOut",
-    }
-  );
+const onSingnOut = () => {
+  storeAuth.logoutUser();
   navigateTo("/");
 };
 </script>

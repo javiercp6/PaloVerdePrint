@@ -80,6 +80,12 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: [
+    "user",
+    // Add in more middleware here
+  ],
+});
 import { useCartStore } from "@/stores/cart";
 const store = useCartStore();
 </script>

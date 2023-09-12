@@ -4,3 +4,12 @@
     <Toaster richColors position="bottom-center" />
   </NuxtLayout>
 </template>
+<script>
+import { useAuthStore } from "@/stores/auth";
+export default {
+  created() {
+    const auth = useAuthStore();
+    auth.postTokenFetch();
+  },
+};
+</script>

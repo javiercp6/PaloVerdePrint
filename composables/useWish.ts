@@ -5,7 +5,6 @@ export const useWish = () => {
   const store = useCartStore();
 
   const wishForm = ref({
-    user: '64e59fee88cb771c854463bb',
     file: null,
     picture: '',
     amount: 1,
@@ -19,7 +18,6 @@ export const useWish = () => {
     pendingWish.value = true
     //let image = URL.createObjectURL(order.value.imageFile)
     const formData = new FormData()
-    formData.append('user', wishForm.value.user)
     if (wishForm.value.file) {      
       formData.append('file', wishForm.value.file)
     }
@@ -35,14 +33,14 @@ export const useWish = () => {
       method: 'POST',
       body: formData
   }) */
-  const wish = await $fetch<Wish>('https://paloverde-production.up.railway.app/api/wishes', {
+  const wish = await $fetch<Wish>('api/wishes', {
     method: 'POST',
     body: formData
   }).catch((error) => {
     alert(error.data.message[0])   
   } )
-  if (wish) {
-    store.addOrder(wish)
+  if (formData) {
+    store.addOrder(wishForm.value)
   }
   pendingWish.value = false
     //store.addOrder({...order.value})

@@ -20,13 +20,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-definePageMeta({
-  auth: {
-    unauthenticatedOnly: false,
-    navigateAuthenticatedTo: "/",
-  },
-});
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>
