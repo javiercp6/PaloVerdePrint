@@ -3,7 +3,7 @@
     <div
       class="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200"
     >
-      <img :src="wish.image" class="h-full w-full object-cover object-center" />
+      <img :src="wish.picture.url" class="h-full w-full object-cover object-center" />
     </div>
 
     <div class="ml-4 flex flex-1 flex-col">
@@ -12,7 +12,7 @@
           <!-- <h3>{{ order.name }}</h3> -->
           <div>
             <p class="mt-1 text-sm text-gray-500">Impression on {{ wish.material }}</p>
-            <p class="mt-1 text-sm text-gray-500">{{ wish.size }}</p>
+            <p class="mt-1 text-sm text-gray-500">{{ wish.price.size }}</p>
           </div>
           <label class="btn btn-ghost btn-circle" @click="emit('remove-order')">
             <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
@@ -32,7 +32,7 @@
           >
             -
           </span>
-          <p class="px-1">{{ wish.amount }}</p>
+          <p class="px-1">{{ wish.quantity }}</p>
           <span
             class="cursor-pointer rounded-r bg-base-300 py-1 px-3 duration-100 hover:bg-primary hover:text-blue-50"
             @click="emit('add-quantity')"
@@ -43,7 +43,7 @@
 
         <div class="flex pr-3">
           <h3 class="text-red-500">
-            ${{ wish.amount * (wish.sizePrice + wish.photoPrice) }}
+            ${{ (wish.quantity * (wish.price.value + wish.picture.price)) / 100 }}
           </h3>
         </div>
       </div>

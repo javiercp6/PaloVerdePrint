@@ -21,7 +21,7 @@ export const useCartStore = defineStore('cart', {
   getters: {
     cartPrice: (state) => {
       let subtotal = 0
-      state.cart.forEach(e => subtotal += ((e.photoPrice + e.sizePrice ) * e.amount));
+      state.cart.forEach(e => subtotal += ((e.picture.price + e.price?.value ) * e.quantity));
       return subtotal
     }
   },
@@ -30,14 +30,16 @@ export const useCartStore = defineStore('cart', {
     addOrder(order: Wish){
       //this.cart = [{name: 'f', material: 'ff', size: 'fff' }]
       console.log(order, 'fff')
+      let ord = {}
+      ord = {...order}
       this.cart.push(order)
     },
     addQuantity(pos: number){
-      this.cart[pos].amount ++
+      this.cart[pos].quantity ++
     },
     restQuantity(pos: number){
-      if (this.cart[pos].amount > 1) {
-        this.cart[pos].amount --
+      if (this.cart[pos].quantity > 1) {
+        this.cart[pos].quantity --
       }
     },
     removeOrder(pos: number){

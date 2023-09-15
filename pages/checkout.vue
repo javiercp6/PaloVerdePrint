@@ -48,11 +48,11 @@
             <div class="flex items-center justify-between my-4">
               <div class="font-semibold">Total</div>
               <div class="text-2xl font-semibold">
-                $ <span class="font-extrabold">{{ store.cartPrice }}</span>
+                $ <span class="font-extrabold">{{ store.cartPrice / 100 }}</span>
               </div>
             </div>
 
-            <form @submit.prevent="pay()">
+            <!-- <form @submit.prevent="pay()">
               <div class="border border-gray-500 p-2 rounded-sm" id="card-element" />
 
               <p
@@ -66,7 +66,20 @@
               >
                 Pay
               </button>
-            </form>
+            </form> -->
+            <button
+              :disabled="pendingAddWish"
+              class="btn btn-primary w-full"
+              @click="pay()"
+            >
+              <span
+                v-if="pendingAddWish"
+                class="loading loading-ring text-primary"
+              ></span>
+              <p :class="pendingAddWish ? 'text-primary' : ''">
+                {{ pendingAddWish ? "Loading" : "Add to Cart" }}
+              </p>
+            </button>
           </div>
 
           <div class="bg-base-200 rounded-lg p-4 mt-4">
@@ -86,6 +99,21 @@ definePageMeta({
     // Add in more middleware here
   ],
 });
+const { addWish, pendingAddWish } = useWish();
 import { useCartStore } from "@/stores/cart";
 const store = useCartStore();
+const { $toast } = useNuxtApp();
+
+const pay = async () => {
+  const { ok, message } = await addWish();
+
+  if (!ok) {
+    $toast.error(message);
+  }
+  /*  const link = document.createElement("a");
+  link.href =
+    "https://checkout.stripe.com/c/pay/cs_test_b1bLyJr7Cd940Rw2e652ygzThzsj10Qi0w1sD4MZqmyn67N4QIgyyult9s#fidkdWxOYHwnPyd1blpxYHZxWjA0S2pdU3ROR0lTMGA0clxcc3BMYEh3ampmajVjc1VSVEpyN1BOSHdhZGhKQFVfM2xsbDxAb09MM3R%2FdVZJZ0RNcUBxVG9xRFVUSzN%2FZjVffGZKR3JLdk8wNTUwY1F%2Fd39CfCcpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPydocGlxbFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl";
+  //link.target = "_blank";
+  link.click(); */
+};
 </script>

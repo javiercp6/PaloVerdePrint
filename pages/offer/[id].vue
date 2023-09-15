@@ -28,13 +28,15 @@
               <!-- class="flex items-center justify-center mt-2" -->
               <div v-for="image in pictures">
                 <img
-                  @click="(currentImage = image.url), (wishForm.picture = image._id)"
+                  @click="clickPicture(image)"
                   width="70"
                   class="rounded-md object-fit border-[3px] cursor-pointer"
                   :class="currentImage === image.url ? 'border-primary' : ''"
                   :src="image.url"
                 />
-                <p class="text-xs text-red-500 flex justify-center">${{ image.price }}</p>
+                <p class="text-xs text-red-500 flex justify-center">
+                  ${{ image.price / 100 }}
+                </p>
               </div>
             </div>
             <div
@@ -54,17 +56,11 @@
         </div>
         <div class="md:w-[60%] p-3 flex justify-center">
           <div class="w-full">
-            <form
+            <!-- <form
               @submit.prevent="addWish(route.params.id as string)"
               v-if="!pendingOffer && !errorOffer"
               class="form-control bg-base-200 rounded-lg p-3"
             >
-              <!--             <input
-              type="text"
-              placeholder="Name Product"
-              class="input input-bordered w-full my-2"
-              v-model="wishForm.name"
-            /> -->
               <label class="label py-0 pt-2">
                 <span class="label-text">Size</span>
               </label>
@@ -108,7 +104,88 @@
                   </p>
                 </button>
               </div>
-            </form>
+            </form> -->
+            <div v-if="!pendingOffer && !errorOffer" class="bg-base-200 rounded-lg p-3">
+              <FormKit
+                type="form"
+                submit-label="Save"
+                @submit="onsubmit"
+                :actions="false"
+                :disabled="pendingWish"
+              >
+                <FormKit
+                  type="select"
+                  v-model="wishForm.price"
+                  name="size"
+                  id="size"
+                  validation="required"
+                  label="Size"
+                  placeholder="Size"
+                >
+                  <option
+                    v-for="price in offer?.prices"
+                    :key="price._id"
+                    :value="price._id"
+                  >
+                    {{ price.size }}
+                  </option>
+                </FormKit>
+                <!-- <FormKit
+                  type="text"
+                  v-model="wishForm.material"
+                  name="material"
+                  id="material"
+                  label="Material"
+                  :value="offer?.material"
+                  placeholder="Size"
+                  disabled
+                >
+                </FormKit> -->
+                <label class="label py-0">
+                  <span class="label-text">Material</span>
+                </label>
+                <select class="select select-bordered w-full">
+                  <option selected>{{ offer?.material }}</option>
+                </select>
+                <FormKit
+                  v-model.number="wishForm.quantity"
+                  type="number"
+                  name="quantity"
+                  label="Quantity"
+                  placeholder="Quantity"
+                  validation="required"
+                  min="1"
+                  step="1"
+                />
+                <div class="flex py-4 justify-between justify-items-center">
+                  <div class="flex justify-items-center">
+                    <h4 class="text-red-500">${{ price / 100 }}</h4>
+                  </div>
+                  <div class="form-control">
+                    <FormKit
+                      :disabled="pendingWish"
+                      :classes="{
+                        input: {
+                          'text-primary': pendingWish,
+                        },
+                      }"
+                      type="submit"
+                    >
+                      <p
+                        :class="pendingWish ? 'text-primary' : ''"
+                        class="flex justify-items-center justify-center"
+                      >
+                        <span
+                          v-if="pendingWish"
+                          class="loading loading-ring text-primary"
+                        ></span>
+                        {{ pendingWish ? "Loading" : "Add to card" }}
+                      </p>
+                    </FormKit>
+                  </div>
+                </div>
+              </FormKit>
+            </div>
             <div
               v-if="pendingOffer || errorOffer"
               class="flex justify-center justify-items-center h-full"
@@ -125,10 +202,14 @@
 
 <script setup lang="ts">
 import { Offer, Picture } from "@/types/interface";
+const { $toast } = useNuxtApp();
 const route = useRoute();
-const { addWish, wishForm, pendingWish } = useWish();
-const currentImage = ref("/assets/noimage.webp");
+const { addWishToCard, wishForm, file, picture, pendingWish } = useWish();
+const currentImage = ref(
+  "https://res.cloudinary.com/dffxm40yt/image/upload/v1694627835/inu4cvmxqkpwnfapqcmh.png"
+);
 let checkboxDrop = ref(false);
+const loading = ref(false);
 
 const { pending: pendingOffer, data: offer, error: errorOffer } = await useFetch<Offer>(
   `/offers/${route.params.id}`,
@@ -144,17 +225,20 @@ const { pending: pendingPictures, data: pictures, error: errorPictures } = await
   server: false,
 });
 
-function getImageDrop(file: File) {
-  const url = URL.createObjectURL(file);
+function getImageDrop(fileDrop: File) {
+  const url = URL.createObjectURL(fileDrop);
   currentImage.value = url;
-  wishForm.value.file = file;
-  wishForm.value.picture = "";
+  file.value = fileDrop;
+  picture.value._id = "";
+  picture.value.url = "";
+  picture.value.price = 0;
   console.log("ddd");
 }
 
 function clearImageDrop() {
-  currentImage.value = "/assets/noimage.webp";
-  wishForm.value.file = null;
+  currentImage.value =
+    "https://res.cloudinary.com/dffxm40yt/image/upload/v1694627835/inu4cvmxqkpwnfapqcmh.png";
+  file.value = null;
 }
 
 const price = computed(() => {
@@ -166,18 +250,47 @@ const price = computed(() => {
     }
   });
   pictures.value?.forEach((e) => {
-    if (e._id === wishForm.value.picture) {
+    if (e._id === picture.value._id) {
       priceSelectedImg = e.price;
     }
   });
-  return (priceSelectedSize + priceSelectedImg) * wishForm.value.amount;
+  return (priceSelectedSize + priceSelectedImg) * Number(wishForm.value.quantity);
 });
 
 watch(checkboxDrop, () => {
-  currentImage.value = "/assets/noimage.webp";
-  wishForm.value.picture = "";
-  wishForm.value.file = null;
+  currentImage.value =
+    "https://res.cloudinary.com/dffxm40yt/image/upload/v1694627835/inu4cvmxqkpwnfapqcmh.png";
+  picture.value._id = "";
+  picture.value.url = "";
+  picture.value.price = 0;
+  file.value = null;
 });
+
+const clickPicture = (image: any) => {
+  (currentImage.value = image.url),
+    (picture.value._id = image._id),
+    (picture.value.url = image.url);
+  picture.value.price = image.price;
+};
+
+const onsubmit = async () => {
+  if (!file.value && !picture.value._id) {
+    $toast.error("Select an image");
+  } else {
+    let price = {};
+    offer.value?.prices.forEach((e) => {
+      if (e._id === wishForm.value.price) {
+        price = e;
+      }
+    });
+    wishForm.value.material = offer.value?.material!;
+    $toast.promise(addWishToCard(route.params.id as string, price), {
+      loading: "Uploading image",
+      success: (data: any) => "Order added to cart",
+      error: (data: any) => data.message,
+    });
+  }
+};
 </script>
 
 <style scoped></style>

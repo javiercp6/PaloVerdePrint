@@ -33,18 +33,25 @@ export interface Offer {
     status?: string;
     shippingId?: string;
   }
-  export interface Wish {
+  /* export interface Wish {
     _id: string,
-    createdAt: string,
+    createdAt?: string,
     material: string,
     image: string,
     ownImage: boolean,
     sizePrice: number,
     photoPrice: number,
-    amount: number,
+    quantity: number,
     size: number,
-  }
+  } */
 
+  export interface Wish {
+    material: string,
+    offer: string,
+    picture: {_id: string, price: number, url: string},
+    price: {_id: string, value: number, size: string},
+    quantity: number,
+  }
   export interface User {
     _id: string,
     email: string,
