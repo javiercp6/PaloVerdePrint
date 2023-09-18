@@ -90,8 +90,8 @@ const login = async (data: DataLogin) => {
 
   loading.value = true;
   //const a = await signIn(data, { redirect: false /* callbackUrl: "/login" */ });
-  const { ok, message } = await store.loginUser(data);
-  if (ok) {
+  const { error } = await store.loginUser(data);
+  if (!error.value) {
     $toast.success("welcome");
     if (route.redirectedFrom?.name === "checkout") {
       navigateTo("/checkout");
@@ -99,43 +99,53 @@ const login = async (data: DataLogin) => {
       navigateTo("/offer");
     }
   } else {
-    $toast.error(message);
+    console.log(error);
+    if (error.value.data) {
+      $toast.error(error.value.data.message || "Error");
+    } else {
+      $toast.error(error.value.message || "Error");
+    }
   }
-
   loading.value = false;
 };
 
 const register = async (data: DataLogin) => {
   console.log(data, "register");
-  try {
-    loading.value = true;
-    /* const a = await signUp(
+  loading.value = true;
+  /* const a = await signUp(
       { email: data.username, password: data.password, fullName: data.fullName },
       { redirect: false}
     ); */
-    const user = await $fetch<DataLogin>("auth/register", {
+  /* const user = await $fetch<DataLogin>("auth/register", {
       method: "POST",
       body: { email: data.username, password: data.password, fullName: data.fullName },
     }).catch((error) => {
       $toast.error(error.data.message[0]);
-    });
-    if (user) {
-      console.log(user, "registrado");
-      /* $toast.promise(login(user), {
+    }); */
+  const { data: user, error } = await useAsyncData<DataLogin>("register", () =>
+    $fetch("/auth/register", {
+      method: "POST",
+      body: { email: data.username, password: data.password, fullName: data.fullName },
+    })
+  );
+  if (user.value) {
+    console.log(user, "registrado");
+    /* $toast.promise(login(user), {
         loading: "Login",
       }); */
-      $toast.success("Registered user successfully");
-      $toast.promise(login(user), {
-        loading: "Login...",
-        success: (data: any) => "",
-        error: (data: any) => "",
-      });
+    $toast.success("Registered user successfully");
+    $toast.promise(login(user.value), {
+      loading: "Login...",
+      success: (data: any) => "",
+      error: (data: any) => "",
+    });
+  }
+  if (error.value) {
+    if (error.value.data) {
+      $toast.error(error.value.data.message || "Error");
+    } else {
+      $toast.error(error.value.message || "Error");
     }
-  } catch (error) {
-    //console.log(error, "aaaaa");
-    alert(error);
-  } finally {
-    loading.value = false;
   }
 };
 </script>

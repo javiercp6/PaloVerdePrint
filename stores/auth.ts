@@ -39,6 +39,7 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async loginUser({ username, password }: UserPayloadInterface) {
+      /* try {
         return await $fetch<{token: string, user: User}>('/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -47,19 +48,36 @@ export const useAuthStore = defineStore('auth', {
             password,
           },
         }).then(response => {
-          /* Update Pinia state */
           this.authenticated = true;
           this.token = response.token
           this.user = response.user
           this.postTokenFetch()
           return { ok: true ,  message: '' }
-          /* Store user in local storage to keep them logged in between page refreshes */
         }).catch((error) => {
-          console.log(error.data.message)
           this.logoutUser()
-          return { ok: false, message: error.data.message as string }
+          return { ok: false, message: error.data.message ? error.data.message : 'error' }
         });
+      } catch (error) {
+        return { ok: false, message: error }
+      } */
+      const loginResult = await useAsyncData<{token: string, user: User}>('login', () => $fetch('/auth/login', {
+        method: 'POST',
+        body: {
+          username,
+          password,
+        },
+        }))
+    console.log(loginResult, 'loginResult')
+    if (loginResult.data.value) {
+      this.authenticated = true;
+      this.token = loginResult.data.value?.token!
+      this.user = loginResult.data.value?.user!
+      this.postTokenFetch()
+    } else {
+      this.logoutUser()
+    }
 
+    return loginResult
     },
     async checkAuth() {
       if (this.token) {
