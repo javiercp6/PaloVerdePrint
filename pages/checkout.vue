@@ -77,7 +77,7 @@
                 class="loading loading-ring text-primary"
               ></span>
               <p :class="pendingAddWish ? 'text-primary' : ''">
-                {{ pendingAddWish ? "Loading" : "Add to Cart" }}
+                {{ pendingAddWish ? "Loading" : "Pay" }}
               </p>
             </button>
           </div>
@@ -94,10 +94,7 @@
 
 <script setup>
 definePageMeta({
-  middleware: [
-    "user",
-    // Add in more middleware here
-  ],
+  middleware: ["user"],
 });
 const { addWish, pendingAddWish } = useWish();
 import { useCartStore } from "@/stores/cart";

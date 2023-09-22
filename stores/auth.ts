@@ -1,5 +1,6 @@
 // stores/counter.js
 import { defineStore } from 'pinia'
+import { useCartStore } from "@/stores/cart";
 import { ofetch } from "ofetch";
 import jwtDecode from 'jwt-decode'
 import type { User } from '../types/interface';
@@ -111,6 +112,8 @@ export const useAuthStore = defineStore('auth', {
       this.token = null; // clear the token cookie
       this.user = {};
       this.postTokenFetch()
+      const storeCart = useCartStore();
+      storeCart.$reset()
     },
   },
   

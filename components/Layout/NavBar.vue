@@ -249,11 +249,12 @@
           </div>
         </div> -->
       </div>
-      <div class="dropdown dropdown-end">
+      <div ref="menuAccount" class="dropdown dropdown-end">
         <label
           v-if="storeAuth.authenticated"
           tabindex="0"
           class="btn btn-ghost btn-circle avatar"
+          @click="dropdownOpenAccount = !dropdownOpenAccount"
         >
           <!-- <div class="w-10 flex justify-center justify-items-center rounded-full">
             <div>
@@ -273,7 +274,8 @@
         </label>
         <ul
           tabindex="0"
-          class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+          class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-200 rounded-box w-52"
+          v-if="dropdownOpenAccount"
         >
           <li>
             <a>{{ storeAuth.user?.fullName }}</a>
@@ -284,6 +286,7 @@
               <span class="badge">New</span>
             </a>
           </li>
+          <li><NuxtLink to="/order">My orders</NuxtLink></li>
           <li @click="onSingnOut"><a>Logout</a></li>
         </ul>
       </div>
@@ -308,14 +311,19 @@ const colorMode = useColorMode();
 const store = useCartStore();
 
 const dropdownOpen = ref(false);
+const dropdownOpenAccount = ref(false);
 
 const route = useRoute();
 
 const menu = ref(null);
+const menuAccount = ref(null);
 onMounted(() => {
   window.addEventListener("click", function (e) {
     if (!menu.value?.contains(e.target)) {
       dropdownOpen.value = false;
+    }
+    if (!menuAccount.value?.contains(e.target)) {
+      dropdownOpenAccount.value = false;
     }
   });
 });
@@ -338,6 +346,7 @@ const darkMode = computed({
 
 watch(route, () => {
   dropdownOpen.value = false;
+  dropdownOpenAccount.value = false;
 });
 
 const onSingnOut = () => {

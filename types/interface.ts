@@ -19,8 +19,15 @@ export interface Offer {
     price: number;
   }
   export interface Order {
+    _id: string;
+    createdAt: string;
+    status: string;
+    paid: number;
+    paymentLink?: string
+    wishes?: any[]
+  }
+ /*  export interface Order {
     _id?: string;
-    name: string;
     material: string;
     size: string;
     price: number;
@@ -32,7 +39,7 @@ export interface Offer {
     customerId?: string;
     status?: string;
     shippingId?: string;
-  }
+  } */
   /* export interface Wish {
     _id: string,
     createdAt?: string,
@@ -47,9 +54,17 @@ export interface Offer {
 
   export interface Wish {
     material: string,
-    offer: string,
-    picture: {_id: string, price: number, url: string},
-    price: {_id: string, value: number, size: string},
+    offer?: string,
+    picture: {_id?: string, price: number, url: string},
+    price: {_id?: string, value: number, size: string},
+    quantity: number,
+  }
+  export interface WishOrder {
+    image: string,
+    material: string,
+    photoPrice: number,
+    size: string,
+    sizePrice: string,
     quantity: number,
   }
   export interface User {

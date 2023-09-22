@@ -98,7 +98,7 @@ export const useWish = () => {
     })
     
   }
-  const openExternal = (endpoint) =>{
+  const openExternal = (endpoint: string) =>{
     const link = document.createElement('a')
     link.href = endpoint
     //link.target = '_blank'

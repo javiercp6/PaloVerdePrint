@@ -14,7 +14,11 @@
             <p class="mt-1 text-sm text-gray-500">Impression on {{ wish.material }}</p>
             <p class="mt-1 text-sm text-gray-500">{{ wish.price.size }}</p>
           </div>
-          <label class="btn btn-ghost btn-circle" @click="emit('remove-order')">
+          <label
+            v-if="isCart"
+            class="btn btn-ghost btn-circle"
+            @click="emit('remove-order')"
+          >
             <svg class="h-5 w-5" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
               <path
                 fill="currentColor"
@@ -27,6 +31,7 @@
       <div class="flex flex-1 items-end justify-between text-sm pt-2">
         <div class="flex items-center border-gray-100">
           <span
+            v-if="isCart"
             class="cursor-pointer rounded-l bg-base-300 py-1 px-3.5 duration-100 hover:bg-primary hover:text-blue-50"
             @click="emit('rest-quantity')"
           >
@@ -34,6 +39,7 @@
           </span>
           <p class="px-1">{{ wish.quantity }}</p>
           <span
+            v-if="isCart"
             class="cursor-pointer rounded-r bg-base-300 py-1 px-3 duration-100 hover:bg-primary hover:text-blue-50"
             @click="emit('add-quantity')"
           >
@@ -52,10 +58,10 @@
 </template>
 
 <script setup lang="ts">
-import type { Wish } from "../../types/interface";
+import type { Wish, WishOrder } from "../../types/interface";
 const emit = defineEmits(["add-quantity", "rest-quantity", "remove-order"]);
-const props = defineProps<{ wish: Wish }>();
-const { wish } = toRefs(props);
+const props = defineProps<{ wish: Wish; isCart?: boolean }>();
+const { wish, isCart } = toRefs(props);
 </script>
 
 <style scoped></style>
