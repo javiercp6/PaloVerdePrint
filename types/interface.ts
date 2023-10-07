@@ -5,6 +5,7 @@ export interface Offer {
     material: string;
     prices: Price[];
     picture?: string;
+    isActive: boolean
   }
   export interface Price {
     _id: string;

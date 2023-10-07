@@ -61,6 +61,7 @@
       </FormKit>
     </div>
   </FormKit>
+  <Toaster richColors position="bottom-center" />
 </template>
 
 <script setup lang="ts">
