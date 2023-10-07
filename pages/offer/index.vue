@@ -4,7 +4,7 @@
       <div
         class="grid gap-4 gap-x-12 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-items-center py-10"
       >
-        <div v-for="offer in offers" class="w-full">
+        <div v-for="offer in offers.data" class="w-full">
           <WidgetsOfferCard :offer="offer" />
         </div>
       </div>

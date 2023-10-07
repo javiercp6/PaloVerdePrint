@@ -26,7 +26,7 @@
               class="grid gap-4 gap-x-1 gap-y-1 grid-cols-7 justify-items-center pt-1"
             >
               <!-- class="flex items-center justify-center mt-2" -->
-              <div v-for="image in pictures">
+              <div v-for="image in pictures.data">
                 <img
                   @click="clickPicture(image)"
                   width="70"
@@ -249,7 +249,7 @@ const price = computed(() => {
       priceSelectedSize = e.value;
     }
   });
-  pictures.value?.forEach((e) => {
+  pictures.value?.data.forEach((e) => {
     if (e._id === picture.value._id) {
       priceSelectedImg = e.price;
     }

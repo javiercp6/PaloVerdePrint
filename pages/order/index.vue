@@ -6,7 +6,7 @@
     >
       <div>
         <WidgetsOrderCard
-          v-for="order in orders"
+          v-for="order in orders.data"
           :key="order._id"
           :order="order"
           showBtn

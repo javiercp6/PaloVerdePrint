@@ -24,6 +24,7 @@
             <div v-for="(wish, index) in store.cart" :key="index">
               <WidgetsCheckoutItem
                 :wish="wish"
+                isCart
                 @add-quantity="store.addQuantity(index)"
                 @rest-quantity="store.restQuantity(index)"
                 @remove-order="store.removeOrder(index)"
