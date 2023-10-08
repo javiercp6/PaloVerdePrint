@@ -1,18 +1,17 @@
-import { Offer } from '../types/interface';
+import { Order } from '../types/interface';
 
 export const useOrder = () => {
-  const getOffers = async():Promise<Object> => {
-    //const { data } = await useFetch<Offer[]>('https://apipaloverde.vercel.app/api/offers');
-    const { pending, data: offers, error } = await useFetch('https://paloverde-production.up.railway.app/api/offers', {
+  const getOrders = async() => {
+    const { page } = useUtils();
+    const orders = await useFetch<{data: Order[], totalPages: number}>("/orders", {
       lazy: true,
-    })
-    console.log(offers, error);
-    return { pending, offers };
-  }
- /*  const getProductById = async(íd: string): Promise<Product> => {
-    const { data } = await useFetch<Product>(`https://apininas.vercel.app/api/products/${íd}`);
-    return data;
-  } */
+      server: false,
+      query: { page: page },
+      watch: [page]
+    });
 
-  return { getOffers }
+    return orders
+  }
+
+  return { getOrders }
 }
