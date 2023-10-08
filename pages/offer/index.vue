@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { Offer } from "@/types/interface";
 const { page } = useUtils();
-const { pending, data, error, refresh } = await useMyFetch<{
+const { pending, data, error, refresh } = await useFetch<{
   data: Offer[];
   totalPages: number;
 }>("/offers", {
