@@ -1,7 +1,7 @@
 import { Offer } from '../types/interface';
 
 export const useOffer = (id: string = '') => {
-  const { page } = useUser();
+  const { page } = useUtils();
   const getOffers = async():Promise<Object> => {
     //const { data } = await useFetch<Offer[]>('https://apipaloverde.vercel.app/api/offers');
     const { pending, data: offers, error } = await useFetch('https://paloverde-production.up.railway.app/api/offers', {
