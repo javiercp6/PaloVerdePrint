@@ -19,7 +19,6 @@ definePageMeta({
   layout: "admin",
   middleware: ["admin"],
 });
-const route = useRoute();
 const { page } = useUtils();
 const { getOffersAdmin } = useOffer();
 const { data, pending, error, refresh } = await getOffersAdmin();

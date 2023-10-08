@@ -1,6 +1,8 @@
 <template>
   <div class="flex flex-col justify-center">
-    <p class="">{{ error.data?.message || error.message }}</p>
+    <p class="text-center">
+      {{ error.data?.message || error.message }}
+    </p>
     <div class="flex justify-center">
       <button class="btn btn-ghost btn-sm text-xs" @click="emitrefresh">
         <svg

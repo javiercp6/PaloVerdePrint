@@ -19,7 +19,6 @@ definePageMeta({
   layout: "admin",
   middleware: ["admin"],
 });
-const route = useRoute();
 const { page } = useUtils();
 const { getOrders } = useOrder();
 const { data, pending, error, refresh } = await getOrders();
