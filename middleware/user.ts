@@ -1,5 +1,5 @@
 import { useAuthStore } from "@/stores/auth";
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware((to, from) => {
     const storeAuth = useAuthStore();
     //const user = useSupabaseUser();
   

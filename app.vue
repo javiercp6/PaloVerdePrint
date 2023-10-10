@@ -1,6 +1,8 @@
 <template>
   <NuxtLayout>
-    <NuxtPage keepalive class="dark:bg-gray-900" style="min-height: calc(100vh - 66px)" />
+    <main>
+      <NuxtPage style="min-height: calc(100vh - 66px)" />
+    </main>
   </NuxtLayout>
 </template>
 <script>

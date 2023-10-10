@@ -23,6 +23,17 @@ module.exports = {
       }
     }
   }, */
+  theme: {
+    /* container: {
+      padding: {
+        DEFAULT: '1rem',
+        sm: '2rem',
+        lg: '4rem',
+        xl: '45rem',
+        '2xl': '23px',
+      },
+    }, */
+  },
   daisyui: {
     themes: [
       {
