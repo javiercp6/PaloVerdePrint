@@ -70,13 +70,16 @@ export const useAuthStore = defineStore('auth', {
         }))
     console.log(loginResult, 'loginResult')
     if (loginResult.data.value) {
+      if (this.token) {
+        this.resetCart()
+      }
       this.authenticated = true;
       this.token = loginResult.data.value?.token!
       this.user = loginResult.data.value?.user!
       this.postTokenFetch()
-    } else {
+    }/*  else {
       this.logoutUser()
-    }
+    } */
 
     return loginResult
     },
@@ -87,11 +90,15 @@ export const useAuthStore = defineStore('auth', {
         if (decodedToken.exp < dateNow.getTime() / 1000) {
           //this.refreshToken()
           this.logoutUser()
+          this.resetCart()
         } else {
           //this.token = token
         }
       } else {
         this.logoutUser()
+        /* if(isResetCart){
+          this.resetCart()
+        } */
       }
     },
 
@@ -112,9 +119,12 @@ export const useAuthStore = defineStore('auth', {
       this.token = null; // clear the token cookie
       this.user = {};
       this.postTokenFetch()
+    },
+
+    resetCart() {
       const storeCart = useCartStore();
       storeCart.$reset()
-    },
+    }
   },
   
   persist: true
