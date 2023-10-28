@@ -8,11 +8,11 @@
 
     <div class="ml-4 flex flex-1 flex-col">
       <div>
-        <div class="flex justify-between text-base font-medium text-gray-900">
+        <div class="flex justify-between text-base font-medium">
           <!-- <h3>{{ order.name }}</h3> -->
           <div>
             <p class="mt-1 text-sm text-gray-500">Impression on {{ wish.material }}</p>
-            <p class="mt-1 text-sm text-gray-500">{{ wish.price.size }}</p>
+            <p class="mt-1 text-sm text-gray-500">{{ wish.width }} x {{ wish.height }}</p>
           </div>
           <label
             v-if="isCart"
@@ -49,7 +49,9 @@
 
         <div class="flex pr-3">
           <h3 class="text-red-500">
-            ${{ (wish.quantity * (wish.price.value + wish.picture.price)) / 100 }}
+            ${{
+              wish.quantity * (wish.price * wish.height * wish.width + wish.picture.price)
+            }}
           </h3>
         </div>
       </div>

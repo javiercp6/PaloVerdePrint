@@ -49,7 +49,7 @@
             <div class="flex items-center justify-between my-4">
               <div class="font-semibold">Total</div>
               <div class="text-2xl font-semibold">
-                $ <span class="font-extrabold">{{ store.cartPrice / 100 }}</span>
+                $ <span class="font-extrabold">{{ store.cartPrice }}</span>
               </div>
             </div>
 
@@ -89,6 +89,7 @@
           </div>
         </div>
       </div>
+      <Toaster richColors position="bottom-center" />
     </div>
   </section>
 </template>
@@ -102,11 +103,19 @@ import { useCartStore } from "@/stores/cart";
 const store = useCartStore();
 const { $toast } = useNuxtApp();
 
-const pay = async () => {
-  const { ok, message } = await addWish();
+/* const showError = () => {
+  $toast(error.value, {
+    description: error.value.data?.message || error.value.message,
+  });
+};
 
-  if (!ok) {
-    $toast.error(message);
+
+showError(); */
+
+const pay = async () => {
+  const { data, error } = await addWish();
+  if (error) {
+    $toast.error(error.value.data?.message || error.value.message);
   }
   /*  const link = document.createElement("a");
   link.href =

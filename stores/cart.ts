@@ -21,7 +21,7 @@ export const useCartStore = defineStore('cart', {
   getters: {
     cartPrice: (state) => {
       let subtotal = 0
-      state.cart.forEach(e => subtotal += ((e.picture.price + e.price?.value ) * e.quantity));
+      state.cart.forEach(e => subtotal += ((e.picture.price + (e.price * e.height * e.width) ) * e.quantity));
       return subtotal
     }
   },

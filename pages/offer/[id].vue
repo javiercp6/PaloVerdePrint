@@ -1,223 +1,255 @@
 <template>
-  <section class="">
-    <div class="mt-4 max-w-[1200px] mx-auto px-2">
-      <div class="md:flex gap-4 justify-between mx-auto w-full">
-        <div class="md:w-[40%] p-3">
-          <div class="bg-base-200 rounded-lg p-3">
-            <img
-              v-if="currentImage"
-              class="bg-base-200 rounded-lg object-cover h-64 w-full"
-              :src="currentImage"
-            />
-            <div class="flex justify-between justify-items-center">
-              <h3 class="pt-3" v-show="!checkboxDrop">Select an image</h3>
-              <span></span>
-              <label class="cursor-pointer p-0 pt-3 label">
-                <span class="label-text pr-1">Upload your image</span>
-                <input
-                  type="checkbox"
-                  class="toggle toggle-primary toggle-sm"
-                  v-model="checkboxDrop"
-                />
-              </label>
-            </div>
-            <div
-              v-if="!checkboxDrop && !pendingPictures && !errorPictures"
-              class="grid gap-4 gap-x-1 gap-y-1 grid-cols-7 justify-items-center pt-1"
-            >
-              <!-- class="flex items-center justify-center mt-2" -->
-              <div v-for="image in pictures.data">
-                <img
-                  @click="clickPicture(image)"
-                  width="70"
-                  class="rounded-md object-fit border-[3px] cursor-pointer"
-                  :class="currentImage === image.url ? 'border-primary' : ''"
-                  :src="image.url"
-                />
-                <p class="text-xs text-red-500 flex justify-center">
-                  ${{ image.price / 100 }}
-                </p>
-              </div>
-            </div>
-            <div
-              v-if="!checkboxDrop && (pendingPictures || errorPictures)"
-              class="flex justify-center justify-items-center h-full"
-            >
-              <span v-if="pendingPictures" class="loading loading-ring loading-lg"></span>
-              <p v-if="errorPictures">{{ errorPictures }}</p>
-            </div>
+  <div class="mt-4 max-w-[1200px] mx-auto px-2 min-h-full">
+    <WidgetsLoading v-if="pendingOffer" />
+    <WidgetsError
+      v-if="errorOffer && !pendingOffer"
+      :error="errorOffer"
+      @refresh="refreshOffer()"
+    />
+    <div
+      v-if="offer"
+      class="md:flex md:flex-row-reverse gap-4 justify-between mx-auto w-full min-h-[calc(100vh - 68px - 80px)]"
+    >
+      <div class="md:w-[40%] p-3">
+        <div class="bg-base-200 rounded-lg p-3">
+          <div v-if="step === 1">
             <WidgetsDropZone
-              v-if="checkboxDrop"
               @pass-image="getImageDrop"
               @clear-image="clearImageDrop"
               class="mt-4"
             />
-          </div>
-        </div>
-        <div class="md:w-[60%] p-3 flex justify-center">
-          <div class="w-full">
-            <!-- <form
-              @submit.prevent="addWish(route.params.id as string)"
-              v-if="!pendingOffer && !errorOffer"
-              class="form-control bg-base-200 rounded-lg p-3"
+            <FormKit
+              ref="formSize"
+              @submit="onsubmitSize()"
+              type="form"
+              submit-label="Save"
+              :actions="false"
+              :disabled="!currentImage"
             >
-              <label class="label py-0 pt-2">
-                <span class="label-text">Size</span>
-              </label>
-              <select v-model="wishForm.price" class="select select-bordered w-full my-2">
-                <option
-                  v-for="price in offer?.prices"
-                  :key="price._id"
-                  :value="price._id"
-                >
-                  {{ price.size }}
-                </option>
-              </select>
-              <label class="label py-0 pt-2">
-                <span class="label-text">Material</span>
-              </label>
-              <select class="select select-bordered w-full my-2">
-                <option selected>{{ offer?.material }}</option>
-              </select>
-              <label class="label py-0 pt-2">
-                <span class="label-text">Amount</span>
-              </label>
-              <input
-                type="number"
-                min="1"
-                class="input input-bordered w-full my-2"
-                v-model="wishForm.amount"
-              />
-              <div class="flex py-4 justify-between">
-                <h3 class="text-red-500">${{ price }}</h3>
-                <button
-                  :disabled="pendingWish"
-                  class="btn btn-primary btn-sm text-xs"
-                  type="submit"
-                >
-                  <span
-                    v-if="pendingWish"
-                    class="loading loading-ring text-primary"
-                  ></span>
-                  <p :class="pendingWish ? 'text-primary' : ''">
-                    {{ pendingWish ? "Loading" : "Add to Cart" }}
-                  </p>
-                </button>
-              </div>
-            </form> -->
-            <div v-if="!pendingOffer && !errorOffer" class="bg-base-200 rounded-lg p-3">
-              <FormKit
-                type="form"
-                submit-label="Save"
-                @submit="onsubmit"
-                :actions="false"
-                :disabled="pendingWish"
-              >
-                <FormKit
-                  type="select"
-                  v-model="wishForm.price"
-                  name="size"
-                  id="size"
-                  validation="required"
-                  label="Size"
-                  placeholder="Size"
-                >
-                  <option
-                    v-for="price in offer?.prices"
-                    :key="price._id"
-                    :value="price._id"
-                  >
-                    {{ price.size }}
-                  </option>
-                </FormKit>
-                <!-- <FormKit
-                  type="text"
-                  v-model="wishForm.material"
-                  name="material"
-                  id="material"
-                  label="Material"
-                  :value="offer?.material"
-                  placeholder="Size"
-                  disabled
-                >
-                </FormKit> -->
-                <label class="label py-0">
-                  <span class="label-text">Material</span>
-                </label>
-                <select class="select select-bordered w-full">
-                  <option selected>{{ offer?.material }}</option>
-                </select>
-                <FormKit
-                  v-model.number="wishForm.quantity"
-                  type="number"
-                  name="quantity"
-                  label="Quantity"
-                  placeholder="Quantity"
-                  validation="required"
-                  min="1"
-                  step="1"
-                />
-                <div class="flex py-4 justify-between justify-items-center">
-                  <div class="flex justify-items-center">
-                    <h4 class="text-red-500">${{ price / 100 }}</h4>
-                  </div>
-                  <div class="form-control">
+              <div class="pt-4 flex justify-items-center">
+                <div class="flex-1">
+                  <div class="flex flex-col justify-center py-1">
+                    <!-- <input
+                      v-model="width"
+                      type="number"
+                      placeholder=""
+                      class="input input-bordered input-sm w-full"
+                    /> -->
                     <FormKit
-                      :disabled="pendingWish"
-                      :classes="{
-                        input: {
-                          'text-primary': pendingWish,
-                        },
-                      }"
-                      type="submit"
-                    >
-                      <p
-                        :class="pendingWish ? 'text-primary' : ''"
-                        class="flex justify-items-center justify-center"
-                      >
-                        <span
-                          v-if="pendingWish"
-                          class="loading loading-ring text-primary"
-                        ></span>
-                        {{ pendingWish ? "Loading" : "Add to card" }}
-                      </p>
-                    </FormKit>
+                      v-model="width"
+                      type="number"
+                      name="Width"
+                      label="Width:"
+                      placeholder="Width:"
+                      :validation="`required|number|between:1,${maxWidth}`"
+                      :help="`The maximum print size that this image accepts is
+                      ${maxWidth} inches`"
+                      validation-visibility="live"
+                      min="1"
+                      :max="maxWidth"
+                      step="1"
+                    />
                   </div>
                 </div>
-              </FormKit>
+              </div>
+              <div class="flex justify-items-center">
+                <div class="flex-1">
+                  <div class="flex flex-col justify-center py-1">
+                    <FormKit
+                      v-model="height"
+                      type="number"
+                      name="Height"
+                      label="Height:"
+                      placeholder="Height:"
+                      :validation="`required|number|between:1,${maxHeight}`"
+                      :help="`The maximum print size that this image accepts is
+                      ${maxHeight} inches`"
+                      validation-visibility="live"
+                      min="1"
+                      step="1"
+                    />
+                  </div>
+                </div>
+                <!-- <div class="flex flex-col justify-center">
+                <input
+                  v-model="height"
+                  type="number"
+                  placeholder=""
+                  class="input input-bordered input-sm max-w-[60px] ml-2"
+                />
+              </div> -->
+              </div>
+            </FormKit>
+            <div class="pt-4 flex justify-items-center">
+              <h4 class="text-red-500">${{ price - price * offer.discount * 0.01 }}</h4>
+              <div class="flex pl-2" v-if="offer.discount > 0">
+                <h4 class="line-through">$ {{ price }}</h4>
+                <span class="badge badge-sm indicator-item text-red-500"
+                  >-{{ offer.discount }} %</span
+                >
+              </div>
             </div>
-            <div
-              v-if="pendingOffer || errorOffer"
-              class="flex justify-center justify-items-center h-full"
+          </div>
+          <div v-if="step === 2">
+            <div>
+              <h2 class="card-title">{{ offer?.title }}</h2>
+              <p>{{ offer?.material }} Print</p>
+            </div>
+            <div class="py-4">
+              <p>Size</p>
+              <div class="pl-2">
+                <p>
+                  Width: <span class="truncate"> {{ width }} </span> inches
+                </p>
+                <p>
+                  Height: <span class="truncate"> {{ height }} </span>
+                  inches
+                </p>
+              </div>
+            </div>
+            <FormKit
+              type="form"
+              submit-label="Save"
+              @submit="onsubmit()"
+              :actions="false"
+              :disabled="pendingWish"
             >
-              <span v-if="pendingOffer" class="loading loading-ring loading-lg"></span>
-              <p v-if="errorOffer">{{ errorOffer }}</p>
-            </div>
+              <FormKit
+                v-model.number="wishForm.quantity"
+                type="number"
+                name="quantity"
+                label="Quantity"
+                placeholder="Quantity"
+                validation="required"
+                min="1"
+                step="1"
+              />
+              <div class="flex py-4 justify-between justify-items-center">
+                <div class="flex flex-col justify-center">
+                  <h4 class="text-red-500">
+                    ${{ price - price * offer.discount * 0.01 }}
+                  </h4>
+                  <div class="flex pl-2" v-if="offer.discount > 0">
+                    <h4 class="line-through">$ {{ price }}</h4>
+                    <span class="badge badge-sm indicator-item text-red-500"
+                      >-{{ offer.discount }} %</span
+                    >
+                  </div>
+                </div>
+                <div class="form-control">
+                  <FormKit
+                    :disabled="pendingWish"
+                    :classes="{
+                      input: {
+                        'text-primary': pendingWish,
+                      },
+                    }"
+                    type="submit"
+                  >
+                    <p
+                      :class="pendingWish ? 'text-primary' : ''"
+                      class="flex justify-items-center justify-center"
+                    >
+                      <span
+                        v-if="pendingWish"
+                        class="loading loading-ring text-primary"
+                      ></span>
+                      {{ pendingWish ? "Loading" : "Add to card" }}
+                    </p>
+                  </FormKit>
+                </div>
+              </div>
+            </FormKit>
+          </div>
+        </div>
+      </div>
+      <div class="md:w-[60%] p-3 flex justify-center">
+        <cropper
+          v-show="step == 1 && !isImgSmall"
+          class="cropper"
+          ref="cropp"
+          :stencil-props="{
+            aspectRatio: width / height,
+          }"
+          :resizeImage="{ wheel: false }"
+          :min-height="height * 300"
+          :min-width="width * 300"
+          :default-size="defaultSize"
+          :src="currentImage"
+          @change=""
+          @ready=""
+          @error=""
+        />
+        <div v-if="step == 1 && isImgSmall" class="flex flex-col justify-center">
+          <h2 class="text-center text-red-500">
+            The image does not have the minimum resolution to print. Please enter another
+            image
+          </h2>
+        </div>
+        <div v-if="step == 2" class="flex flex-col justify-center">
+          <div class="max-h-min bg-slate-50 shadow-lg shadow-black p-3">
+            <preview
+              :width="500"
+              :height="500 * (result.coordinates?.height / result.coordinates?.width)"
+              :image="result.image"
+              :coordinates="result.coordinates"
+            />
           </div>
         </div>
       </div>
     </div>
-  </section>
+    <div class="flex justify-between py-4">
+      <button
+        class="btn btn-primary btn-sm text-xs btn-outline"
+        :class="step === 1 ? 'invisible' : ''"
+        @click="step = 1"
+      >
+        Back
+      </button>
+      <button
+        class="btn btn-primary btn-sm text-xs"
+        :class="step === 2 || !currentImage ? 'invisible' : ''"
+        @click="next()"
+      >
+        {{ step === 2 ? "Loading" : "Next" }}
+      </button>
+    </div>
+    <Toaster richColors position="bottom-center" />
+  </div>
 </template>
 
 <script setup lang="ts">
 import { Offer, Picture } from "@/types/interface";
 const { $toast } = useNuxtApp();
 const route = useRoute();
-const { addWishToCard, wishForm, file, picture, pendingWish } = useWish();
-const currentImage = ref(
+const { addWishToCard, wishForm, picture, pendingWish } = useWish();
+/* const currentImage = ref(
   "https://res.cloudinary.com/dffxm40yt/image/upload/v1694627835/inu4cvmxqkpwnfapqcmh.png"
-);
-let checkboxDrop = ref(false);
-const loading = ref(false);
+); */
+const cropp = ref();
+const formSize = ref<any>(null);
+const imgType = ref("image/jpeg");
+const height = ref(0);
+const width = ref(0);
+const maxHeight = ref(0);
+const maxWidth = ref(0);
+const step = ref(1);
+const loadingCrop = ref(false);
+const currentImage = ref("");
+const result = ref({
+  coordinates: null,
+  image: null,
+});
 
-const { pending: pendingOffer, data: offer, error: errorOffer } = await useFetch<Offer>(
-  `/offers/${route.params.id}`,
-  {
-    lazy: true,
-    server: false,
-  }
-);
+const {
+  pending: pendingOffer,
+  data: offer,
+  error: errorOffer,
+  refresh: refreshOffer,
+} = await useFetch<Offer>(`/offers/${route.params.id}`, {
+  lazy: true,
+  server: false,
+});
 const { pending: pendingPictures, data: pictures, error: errorPictures } = await useFetch<
   Picture[]
 >(`/pictures`, {
@@ -225,72 +257,127 @@ const { pending: pendingPictures, data: pictures, error: errorPictures } = await
   server: false,
 });
 
-function getImageDrop(fileDrop: File) {
+const getImageDrop = async (fileDrop: File) => {
+  const img = new Image();
+  img.onload = function () {
+    maxHeight.value = img.height / 300;
+    maxWidth.value = img.width / 300;
+    height.value = img.height / 300 / 2;
+    width.value = img.width / 300 / 2;
+  };
+  img.src = URL.createObjectURL(fileDrop);
+  imgType.value = fileDrop.type ? fileDrop.type : "image/jpeg";
   const url = URL.createObjectURL(fileDrop);
   currentImage.value = url;
-  file.value = fileDrop;
   picture.value._id = "";
   picture.value.url = "";
   picture.value.price = 0;
-  console.log("ddd");
-}
+};
 
 function clearImageDrop() {
-  currentImage.value =
-    "https://res.cloudinary.com/dffxm40yt/image/upload/v1694627835/inu4cvmxqkpwnfapqcmh.png";
-  file.value = null;
+  currentImage.value = "";
+  //cropper.destroy();
+  maxHeight.value = 0;
+  maxWidth.value = 0;
+  height.value = 1;
+  width.value = 1;
 }
 
+watch(width, (newValue, oldName) => {
+  // Haz algo (side effects) 👁
+  if (newValue > maxWidth.value || newValue < 1) {
+    width.value = oldName;
+  }
+});
+watch(height, (newValue, oldName) => {
+  // Haz algo (side effects) 👁
+  if (newValue > maxHeight.value || newValue < 1) {
+    height.value = oldName;
+  }
+});
+
+const defaultSize = ({ imageSize, visibleArea }: any) => {
+  return {
+    width: (visibleArea || imageSize).width,
+    height: (visibleArea || imageSize).height,
+  };
+};
+
+const flip = (x: boolean, y: boolean) => {
+  cropp.value.flip(x, y);
+};
+const rotate = (angle: number) => {
+  cropp.value.rotate(angle);
+};
+
+const uploadImage = async () => {
+  loadingCrop.value = true;
+  const { coordinates, image } = await cropp.value.getResult();
+  result.value = {
+    coordinates,
+    image,
+  };
+  console.log(coordinates, image);
+  loadingCrop.value = false;
+};
+
 const price = computed(() => {
-  let priceSelectedSize = 0;
-  let priceSelectedImg = 0;
-  offer.value?.prices.forEach((e) => {
-    if (e._id === wishForm.value.price) {
-      priceSelectedSize = e.value;
-    }
-  });
-  pictures.value?.data.forEach((e) => {
-    if (e._id === picture.value._id) {
-      priceSelectedImg = e.price;
-    }
-  });
-  return (priceSelectedSize + priceSelectedImg) * Number(wishForm.value.quantity);
+  return (
+    offer.value?.price! * (width.value * height.value) * Number(wishForm.value.quantity)
+  );
 });
 
-watch(checkboxDrop, () => {
-  currentImage.value =
-    "https://res.cloudinary.com/dffxm40yt/image/upload/v1694627835/inu4cvmxqkpwnfapqcmh.png";
-  picture.value._id = "";
-  picture.value.url = "";
-  picture.value.price = 0;
-  file.value = null;
+const isImgSmall = computed(() => {
+  return currentImage.value && (maxWidth.value < 1 || maxHeight.value < 1) ? true : false;
 });
 
-const clickPicture = (image: any) => {
-  (currentImage.value = image.url),
-    (picture.value._id = image._id),
-    (picture.value.url = image.url);
-  picture.value.price = image.price;
+const next = () => {
+  const node = formSize.value?.node;
+  const a = node.submit();
+  console.log(a);
+};
+
+const onsubmitSize = async () => {
+  await uploadImage();
+  step.value = 2;
+  console.log(step.value);
 };
 
 const onsubmit = async () => {
-  if (!file.value && !picture.value._id) {
+  if (!currentImage.value && !picture.value._id) {
     $toast.error("Select an image");
   } else {
-    let price = {};
-    offer.value?.prices.forEach((e) => {
-      if (e._id === wishForm.value.price) {
-        price = e;
-      }
-    });
+    pendingWish.value = true;
     wishForm.value.material = offer.value?.material!;
-    $toast.promise(addWishToCard(route.params.id as string, price), {
-      loading: "Uploading image",
-      success: (data: any) => "Order added to cart",
-      error: (data: any) => data.message,
-    });
+    wishForm.value.price = offer.value?.price!;
+    const { canvas } = await cropp.value.getResult();
+    if (canvas) {
+      canvas.toBlob((blob: any) => {
+        $toast.promise(
+          addWishToCard(route.params.id as string, width.value, height.value, blob),
+          {
+            loading: "Uploading image...",
+            success: (data: any) => "Order added to cart",
+            error: (data: any) => data.message,
+          }
+        );
+      }, imgType);
+    }
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.cropper {
+  height: 500px;
+  width: 100%;
+  background: #ddd;
+}
+
+.truncate {
+  width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>

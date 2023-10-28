@@ -73,7 +73,7 @@
 <script setup lang="ts">
 const emit = defineEmits(["pass-image", "clear-image"]);
 const dragActive = ref(false);
-const droppedFile = ref(null);
+const droppedFile = ref<any>(null);
 
 const toggle_active = () => {
   console.log("toggle_active");
@@ -82,13 +82,13 @@ const toggle_active = () => {
   }
 };
 
-const drop = (event) => {
+const drop = (event: any) => {
   console.log("drop");
   droppedFile.value = event.dataTransfer.files[0];
   emit("pass-image", event.dataTransfer.files[0]);
 };
 
-const selectedFile = (event) => {
+const selectedFile = (event: any) => {
   console.log("selectedFile");
   droppedFile.value = event.target.files[0];
   emit("pass-image", event.target.files[0]);

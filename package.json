@@ -25,6 +25,7 @@
     "@pinia/nuxt": "^0.4.11",
     "@unlok-co/nuxt-stripe": "^2.0.0",
     "jwt-decode": "^3.1.2",
+    "vue-advanced-cropper": "^2.8.8",
     "vue-sonner": "^0.4.4"
   }
 }

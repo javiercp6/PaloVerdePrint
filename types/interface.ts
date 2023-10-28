@@ -3,7 +3,8 @@ export interface Offer {
     title: string;
     image: string;
     material: string;
-    prices: Price[];
+    discount: number
+    price: number;
     picture?: string;
     isActive: boolean
   }
@@ -57,7 +58,9 @@ export interface Offer {
     material: string,
     offer?: string,
     picture: {_id?: string, price: number, url: string},
-    price: {_id?: string, value: number, size: string},
+    width: number,
+    height: number,
+    price: number,
     quantity: number,
   }
   export interface WishOrder {

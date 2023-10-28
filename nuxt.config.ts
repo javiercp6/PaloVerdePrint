@@ -2,8 +2,14 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   build: {
-    transpile: ['vue-sonner']
+    transpile: ['vue-sonner', 'vue-advanced-cropper']
   },
+  /* plugins: [
+    '/plugins/vue-advanced-cropper.ts'
+  ], */
+  css: [
+    '@/assets/css/main.css',
+  ],
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@pinia-plugin-persistedstate/nuxt', '@nuxtjs/color-mode'/* , '@sidebase/nuxt-auth' */, '@formkit/nuxt'],
   colorMode: {
     preference: 'system', // default theme
@@ -14,7 +20,7 @@ export default defineNuxtConfig({
     public: {
       baseURL: process.env.BASE_URL || 'https://paloverde-production.up.railway.app/',
     },
-  },
+  }
   /* fetch: {
     baseURL: process.env.BASE_URL,
     headers: {
