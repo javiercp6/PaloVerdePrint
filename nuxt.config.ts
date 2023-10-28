@@ -7,9 +7,6 @@ export default defineNuxtConfig({
   /* plugins: [
     '/plugins/vue-advanced-cropper.ts'
   ], */
-  css: [
-    '@/assets/css/main.css',
-  ],
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@pinia-plugin-persistedstate/nuxt', '@nuxtjs/color-mode'/* , '@sidebase/nuxt-auth' */, '@formkit/nuxt'],
   colorMode: {
     preference: 'system', // default theme
