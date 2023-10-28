@@ -76,7 +76,6 @@ const dragActive = ref(false);
 const droppedFile = ref<any>(null);
 
 const toggle_active = () => {
-  console.log("toggle_active");
   if (droppedFile.value == null) {
     dragActive.value = !dragActive.value;
   }

@@ -87,8 +87,6 @@ const onsubmit = async (data: DataLogin) => {
 };
 
 const login = async (data: DataLogin) => {
-  console.log(data);
-
   loading.value = true;
   //const a = await signIn(data, { redirect: false /* callbackUrl: "/login" */ });
   const { error } = await store.loginUser(data);
