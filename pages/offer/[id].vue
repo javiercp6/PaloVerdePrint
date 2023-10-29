@@ -324,7 +324,9 @@ const uploadImage = async () => {
 
 const price = computed(() => {
   return (
-    offer.value?.price! * (width.value * height.value) * Number(wishForm.value.quantity)
+    offer.value?.price! *
+    (Math.ceil(width.value) * Math.ceil(height.value)) *
+    Number(wishForm.value.quantity)
   );
 });
 
