@@ -9,7 +9,7 @@
           natus nihil aut quia voluptas vel quia assumenda. Ea quae odit vel enim dicta
           est earum quasi sit ipsam asperiores ut optio eius et saepe error.
         </p>
-        <NuxtLink to="/offer" class="btn btn-primary">See offers</NuxtLink>
+        <NuxtLink to="/offer" class="btn btn-primary">Print</NuxtLink>
       </div>
     </div>
   </div>
