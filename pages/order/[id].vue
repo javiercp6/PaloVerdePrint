@@ -8,8 +8,10 @@
           :wish="{
             picture: { url: wish.image, price: wish.photoPrice },
             material: wish.material,
-            price: { size: wish.size, value: wish.sizePrice },
+            price: wish.offerPrice,
             quantity: wish.quantity,
+            height: wish.height,
+            width: wish.width,
           }"
         />
         <div v-if="order?.wishes!.length !== index + 1" class="divider"></div>

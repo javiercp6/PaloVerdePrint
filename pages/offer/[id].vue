@@ -81,9 +81,11 @@
               </div>
             </FormKit>
             <div class="pt-4 flex justify-items-center">
-              <h4 class="text-red-500">${{ price - price * offer.discount * 0.01 }}</h4>
+              <h4 class="text-red-500">
+                ${{ (price - price * offer.discount * 0.01) * 0.01 }}
+              </h4>
               <div class="flex pl-2" v-if="offer.discount > 0">
-                <h4 class="line-through">$ {{ price }}</h4>
+                <h4 class="line-through">$ {{ price * 0.01 }}</h4>
                 <span class="badge badge-sm indicator-item text-red-500"
                   >-{{ offer.discount }} %</span
                 >
@@ -127,10 +129,10 @@
               <div class="flex py-4 justify-between justify-items-center">
                 <div class="flex flex-col justify-center">
                   <h4 class="text-red-500">
-                    ${{ price - price * offer.discount * 0.01 }}
+                    ${{ (price - price * offer.discount * 0.01) * 0.01 }}
                   </h4>
-                  <div class="flex pl-2" v-if="offer.discount > 0">
-                    <h4 class="line-through">$ {{ price }}</h4>
+                  <div class="flex" v-if="offer.discount > 0">
+                    <h4 class="line-through">$ {{ price * 0.01 }}</h4>
                     <span class="badge badge-sm indicator-item text-red-500"
                       >-{{ offer.discount }} %</span
                     >
@@ -176,8 +178,6 @@
           :min-width="width * 300"
           :default-size="defaultSize"
           :src="currentImage"
-          @change=""
-          @ready=""
           @error=""
         />
         <div v-if="step == 1 && isImgSmall" class="flex flex-col justify-center">

@@ -49,7 +49,7 @@
             <div class="flex items-center justify-between my-4">
               <div class="font-semibold">Total</div>
               <div class="text-2xl font-semibold">
-                $ <span class="font-extrabold">{{ store.cartPrice }}</span>
+                $ <span class="font-extrabold">{{ store.cartPrice * 0.01 }}</span>
               </div>
             </div>
 

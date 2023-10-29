@@ -12,7 +12,9 @@
           <!-- <h3>{{ order.name }}</h3> -->
           <div>
             <p class="mt-1 text-sm text-gray-500">Impression on {{ wish.material }}</p>
-            <p class="mt-1 text-sm text-gray-500">{{ wish.width }} x {{ wish.height }}</p>
+            <p class="mt-1 text-sm text-gray-500">
+              {{ wish.width }} W x {{ wish.height }} H
+            </p>
           </div>
           <label
             v-if="isCart"
@@ -50,7 +52,9 @@
         <div class="flex pr-3">
           <h3 class="text-red-500">
             ${{
-              wish.quantity * (wish.price * wish.height * wish.width + wish.picture.price)
+              wish.quantity *
+              (wish.price * wish.height * wish.width + wish.picture.price) *
+              0.01
             }}
           </h3>
         </div>
