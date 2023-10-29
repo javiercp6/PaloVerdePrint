@@ -259,6 +259,7 @@ const {
 
 const getImageDrop = async (fileDrop: File) => {
   const img = new Image();
+  console.log(fileDrop);
   img.onload = function () {
     maxHeight.value = img.height / 300;
     maxWidth.value = img.width / 300;
@@ -353,6 +354,7 @@ const onsubmit = async () => {
     const { canvas } = await cropp.value.getResult();
     if (canvas) {
       canvas.toBlob((blob: any) => {
+        console.log(blob);
         $toast.promise(
           addWishToCard(route.params.id as string, width.value, height.value, blob),
           {
@@ -361,7 +363,7 @@ const onsubmit = async () => {
             error: (data: any) => data.message,
           }
         );
-      }, imgType);
+      }, "image/jpeg");
     }
   }
 };
