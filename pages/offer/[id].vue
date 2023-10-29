@@ -250,12 +250,12 @@ const {
   lazy: true,
   server: false,
 });
-const { pending: pendingPictures, data: pictures, error: errorPictures } = await useFetch<
+/* const { pending: pendingPictures, data: pictures, error: errorPictures } = await useFetch<
   Picture[]
 >(`/pictures`, {
   lazy: true,
   server: false,
-});
+}); */
 
 const getImageDrop = async (fileDrop: File) => {
   const img = new Image();
