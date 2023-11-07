@@ -11,7 +11,7 @@
       type="text"
       name="fullName"
       id="fullname"
-      validation="required|alpha_spaces:latin"
+      validation="required|alpha_spaces"
       label="Fullname"
       placeholder="Fullname"
     />
