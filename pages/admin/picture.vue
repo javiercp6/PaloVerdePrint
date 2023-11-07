@@ -3,12 +3,9 @@ import { AdminTableUser } from '../../.nuxt/components';
   <main class="flex-1 overflow-y-auto pt-8 px-6">
     <AdminTableLayout title-btn="Add Picture" title="Pictures">
       <template v-slot:tableBody>
-        <AdminTablePicture
-          v-if="data?.data && !pending && !error"
-          :pictures="data.data"
-        />
-        <span v-if="pending" class="loading loading-ring loading-lg"></span>
-        <WidgetsError v-if="error && !pending" :error="error" @refresh="refresh()" />
+        <AdminTablePicture v-if="data?.data" :pictures="data.data" />
+        <WidgetsLoading v-else-if="pending" />
+        <WidgetsError v-else-if="error" :error="error" @refresh="refresh()" />
       </template>
       <template v-slot:pagination>
         <WidgetsPagination :page="page" :totalPage="data?.totalPages!" />
