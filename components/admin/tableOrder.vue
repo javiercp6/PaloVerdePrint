@@ -21,6 +21,13 @@
               {{ order.status }}
             </div>
           </td>
+          <td>
+            <NuxtLink
+              :to="{ path: '/admin/order/' + order._id }"
+              class="btn btn-outline btn-primary btn-xs text-xs"
+              >Details</NuxtLink
+            >
+          </td>
         </tr>
       </tbody>
     </table>

@@ -13,5 +13,14 @@ export const useOrder = () => {
     return orders
   }
 
-  return { getOrders }
+  const getOrderById = async(id: string) => {
+    const order = await useFetch<Order>(`/orders/${id}`, {
+      lazy: true,
+      server: false,
+    });
+
+    return order
+  }
+
+  return { getOrders, getOrderById }
 }
