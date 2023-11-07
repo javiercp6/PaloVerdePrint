@@ -28,6 +28,27 @@
               />
             </svg>
           </label>
+          <label
+            v-if="!isCart"
+            class="btn btn-ghost btn-circle"
+            @click="downloadPicture()"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"></path>
+              <path d="M7 11l5 5l5 -5"></path>
+              <path d="M12 4l0 12"></path>
+            </svg>
+          </label>
         </div>
       </div>
       <div class="flex flex-1 items-end justify-between text-sm pt-2">
@@ -65,9 +86,45 @@
 
 <script setup lang="ts">
 import type { Wish, WishOrder } from "../../types/interface";
-const emit = defineEmits(["add-quantity", "rest-quantity", "remove-order"]);
+const emit = defineEmits([
+  "add-quantity",
+  "rest-quantity",
+  "remove-order",
+  "download-photo",
+]);
 const props = defineProps<{ wish: Wish; isCart?: boolean }>();
 const { wish, isCart } = toRefs(props);
+
+const downloadPicture = () => {
+  /* const link = document.createElement("a");
+  link.href = wish.value.picture.url;
+  link.setAttribute(
+    "download",
+    `Impression on ${wish.value.material} ${wish.value.width} W x ${wish.value.height} H`
+  );
+ */
+  fetch(wish.value.picture.url)
+    .then((response) => response.blob())
+    .then((blob) => {
+      // Crea un objeto URL desde el blob
+      const url = window.URL.createObjectURL(blob);
+
+      // Crea un elemento 'a' invisible
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Impression on ${wish.value.material} ${wish.value.width} W x ${wish.value.height} H.jpg`; // Reemplaza 'nombreDescarga.jpg' con el nombre que quieras para la descarga
+
+      // Agrega el enlace al DOM
+      document.body.appendChild(link);
+
+      // Haz clic en el enlace para iniciar la descarga
+      link.click();
+
+      // Elimina el enlace del DOM
+      document.body.removeChild(link);
+    })
+    .catch((error) => console.error(error));
+};
 </script>
 
 <style scoped></style>
