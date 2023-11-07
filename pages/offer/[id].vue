@@ -174,8 +174,8 @@
             aspectRatio: width / height,
           }"
           :resizeImage="{ wheel: false }"
-          :min-height="height * 300"
-          :min-width="width * 300"
+          :min-height="height * 150"
+          :min-width="width * 150"
           :default-size="defaultSize"
           :src="currentImage"
           @error=""
@@ -261,10 +261,10 @@ const getImageDrop = async (fileDrop: File) => {
   const img = new Image();
   console.log(fileDrop);
   img.onload = function () {
-    maxHeight.value = img.height / 300;
-    maxWidth.value = img.width / 300;
-    height.value = img.height / 300 / 2;
-    width.value = img.width / 300 / 2;
+    maxHeight.value = img.height / 150;
+    maxWidth.value = img.width / 150;
+    height.value = img.height / 150 / 2;
+    width.value = img.width / 150 / 2;
   };
   img.src = URL.createObjectURL(fileDrop);
   imgType.value = fileDrop.type ? fileDrop.type : "image/jpeg";
@@ -289,12 +289,14 @@ watch(width, (newValue, oldName) => {
   if (newValue > maxWidth.value || newValue < 1) {
     width.value = oldName;
   }
+  defaultSize;
 });
 watch(height, (newValue, oldName) => {
   // Haz algo (side effects) 👁
   if (newValue > maxHeight.value || newValue < 1) {
     height.value = oldName;
   }
+  defaultSize;
 });
 
 const defaultSize = ({ imageSize, visibleArea }: any) => {
